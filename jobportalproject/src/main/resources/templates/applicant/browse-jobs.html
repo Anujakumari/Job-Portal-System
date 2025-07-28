@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Browse Jobs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div> <!-- ✅ Navbar -->
+
+<div class="container mt-5">
+  <!-- Optional message (e.g. already applied) -->
+  <div th:if="${message}" class="alert alert-info" th:text="${message}"></div>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Available Jobs</h2>
+  </div>
+
+  <!-- Search bar -->
+ 
+  <form class="input-group mb-4" method="get" action="">
+  <input type="text" class="form-control" name="keyword"
+         th:value="${keyword}" placeholder="Search by title or location..." />
+  <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+  
+
+  <!-- Grid layout for job cards -->
+  <div class="row" th:if="${!#lists.isEmpty(jobs)}">
+    <div class="col-md-6 col-lg-4 mb-4" th:each="job : ${jobs}">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold" th:text="${job.title}"></h5>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="${job.location}"></h6>
+          <p class="card-text" th:text="${job.description}"></p>
+
+          <form th:action="@{'/applicant/apply/' + ${job.id}}" method="post">
+            <button class="btn btn-success" type="submit">Apply</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div th:if="${#lists.isEmpty(jobs)}" class="alert alert-warning">
+    No jobs found.
+  </div>
+</div>
+
+</body>
+</html>
